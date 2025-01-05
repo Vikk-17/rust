@@ -9,6 +9,14 @@ struct Rectangle{
     height: u32,
 }
 
+// impl => implementation 
+impl Rectangle {
+    // self: &self or &self
+    fn area(&self) -> u32 {
+        self.width * self.height
+    }
+}
+
 /**
 fn main() {
     
@@ -36,6 +44,7 @@ fn area1(rectangle: &Rectangle) -> u32 {
 }
 */ 
 fn main(){
+    /*
     let scale = 2;
     let rect1 = Rectangle{
         width: dbg!(30 * scale),
@@ -46,4 +55,10 @@ fn main(){
     dbg!(&rect1);
     // this macro can be really helpfun when we are trying to figure out 
     // what our code is doing.
+    */ 
+    let rect1 = Rectangle{
+        width: 30,
+        height: 50,
+    };
+    println!("The area of the rectangle is {} square pixels", rect1.area());
 }
