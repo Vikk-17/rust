@@ -8,3 +8,4 @@ This repo will be focused on
 # Count
 - [x] Day 1 -> Ownership
 - [x] Day 2 -> Structs basic
+- [x] Day 3 -> Method Syntax of Structs
