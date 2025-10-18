@@ -6,7 +6,8 @@ pub struct Point<T> {
 }
 
 impl<T> Point<T>
-where T:Add<Output = T> + Mul<Output = T>+ Copy,
+where 
+    T:Add<Output = T> + Mul<Output = T> + Copy,
 {
     pub fn calcualtion(&self, other: &Point<T>) -> T {
         return (self.x * other.x) + (self.y * other.y);
