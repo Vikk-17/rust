@@ -4,7 +4,8 @@ use std::{
     process,
     error::Error,
 };
-// use text_analyzer::*;
+
+use serde::Serialize;
 
 fn main() -> Result<(), Box<dyn Error>> {
     let args: Vec<String> = env::args().collect();
@@ -15,8 +16,38 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     if config.cmd == "stat" {
         // print the all metadata of the file
-        let metadata = fs::metadata(config.file_name)?;
-        println!("{metadata:?}");
+        let metadata = fs::metadata(&config.file_name)?;
+        
+        let file_type = if metadata.is_dir() {
+            "directotry"
+        } else if metadata.is_file() {
+            "file"
+        } else if metadata.is_symlink() {
+            "symlink"
+        } else {
+            "unknown"
+        };
+
+        #[cfg(unix)]
+        let permissions = {
+            use::std::os::unix::fs::PermissionsExt;
+            format!("{:o}", metadata.permissions().mode() & 0o777)
+        };
+
+        #[cfg(not(unix))]
+        let permissions = if metadata.mode().readonly() {
+            "read-only".to_string()
+        } else {
+            "read-write".to_string()
+        };
+
+        let file_stats: FileStats = FileStats { 
+            name: config.file_name,
+            file_type: file_type.to_string(),
+            size_bytes: metadata.len(), 
+            permissions: permissions.clone()
+        };
+        println!("{}", serde_json::to_string_pretty(&file_stats)?);
     } else {
         println!("Expected to print other things");
     }
@@ -24,6 +55,13 @@ fn main() -> Result<(), Box<dyn Error>> {
     Ok(())
 }
 
+#[derive(Serialize)]
+struct FileStats {
+    name: String,
+    file_type: String,
+    size_bytes: u64,
+    permissions: String,
+}
 
 // The command line expectation
 struct Config {
