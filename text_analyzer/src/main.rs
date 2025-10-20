@@ -4,8 +4,10 @@ use std::{
     process,
     error::Error,
 };
-
-use serde::Serialize;
+use text_analyzer::{
+    Config,
+    FileStats
+};
 
 fn main() -> Result<(), Box<dyn Error>> {
     let args: Vec<String> = env::args().collect();
@@ -17,35 +19,16 @@ fn main() -> Result<(), Box<dyn Error>> {
     if config.cmd == "stat" {
         // print the all metadata of the file
         let metadata = fs::metadata(&config.file_name)?;
-        
-        let file_type = if metadata.is_dir() {
-            "directotry"
-        } else if metadata.is_file() {
-            "file"
-        } else if metadata.is_symlink() {
-            "symlink"
-        } else {
-            "unknown"
-        };
-
-        #[cfg(unix)]
-        let permissions = {
-            use::std::os::unix::fs::PermissionsExt;
-            format!("{:o}", metadata.permissions().mode() & 0o777)
-        };
-
-        #[cfg(not(unix))]
-        let permissions = if metadata.mode().readonly() {
-            "read-only".to_string()
-        } else {
-            "read-write".to_string()
-        };
+        let file_type = FileStats::file_type(&metadata);
+        let permissions = FileStats::get_permissions(&metadata).clone();
+        let name = config.file_name; 
+        let size_bytes = metadata.len();
 
         let file_stats: FileStats = FileStats { 
-            name: config.file_name,
-            file_type: file_type.to_string(),
-            size_bytes: metadata.len(), 
-            permissions: permissions.clone()
+            name,
+            file_type,
+            size_bytes, 
+            permissions 
         };
         println!("{}", serde_json::to_string_pretty(&file_stats)?);
     } else {
@@ -55,32 +38,3 @@ fn main() -> Result<(), Box<dyn Error>> {
     Ok(())
 }
 
-#[derive(Serialize)]
-struct FileStats {
-    name: String,
-    file_type: String,
-    size_bytes: u64,
-    permissions: String,
-}
-
-// The command line expectation
-struct Config {
-    cmd: String,
-    file_name: String,
-}
-
-impl Config {
-    fn build(args: &[String]) -> Result<Config, &'static str> {
-        if args.len() < 3 {
-            return Err("Not enough argument");
-        }
-        let cmd = args[1].clone();
-        let file_name = args[2].clone();
-
-
-        Ok(Config {
-            cmd,
-            file_name,
-        })
-    }
-}
