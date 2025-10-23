@@ -12,10 +12,8 @@ const DB_NAME: &str = "myApp";
 const COLL_NAME: &str = "users";
 
 
-
-
 #[post("/add_user")]
-async fn add_user(client: web::Data<Client>, form: web::Form<User>) -> HttpResponse {
+async fn add_user(client: web::Data<Client>, form: web::Json<User>) -> HttpResponse {
     let collection = client.database(DB_NAME).collection(COLL_NAME);
     let result = collection.insert_one(form.into_inner()).await;
     match result {
