@@ -1,9 +1,8 @@
 mod model;
+#[cfg(test)]
+mod test;
 
-
-// extern crate dotenv;
 use dotenv::dotenv;
-
 use model::User;
 use actix_web::{get, post, web, App, HttpResponse, HttpServer, Responder};
 use mongodb::{Client, Collection, IndexModel, bson::doc, options::IndexOptions};
@@ -52,7 +51,7 @@ async fn create_username_index(client: &Client) {
 
 
 #[get("/")]
-async fn test() -> impl Responder {
+async fn test_func() -> impl Responder {
     HttpResponse::Ok().body("testing server")
 }
 
@@ -78,7 +77,7 @@ async fn main() -> std::io::Result<()> {
             .app_data(web::Data::new(client.clone()))
             .service(add_user)
             .service(get_user)
-            .service(test)
+            .service(test_func)
             .route("/hey", web::get().to(manual_hello))
     })
     .bind(("127.0.0.1", 8000))?.run().await
