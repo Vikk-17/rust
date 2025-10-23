@@ -37,6 +37,7 @@ This repo will be focused on
 
 
 ---
+
 ## Stages
 
 ### Level 1: **Tutorial Toy Projects**
@@ -79,3 +80,5 @@ This repo will be focused on
 - Deliver business critical feature
 - Trust
 - Mentoring
+
+---
