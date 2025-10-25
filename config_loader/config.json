@@ -1,9 +1,46 @@
 {
-  "server": {
-    "host": "127.0.0.1",
-    "port": 8080
-  },
-  "database": {
-    "url": "postgres://user:pass@localhost/db"
-  }
+    "_id": "68fccadaf58bc20f65c1de2f",
+    "index": 0,
+    "guid": "2b260397-bc1d-4aaf-904b-bba17a22b98b",
+    "isActive": true,
+    "balance": "$2,385.31",
+    "picture": "http://placehold.it/32x32",
+    "age": 22,
+    "eyeColor": "blue",
+    "name": "Beverley Lowery",
+    "gender": "female",
+    "company": "IMAGINART",
+    "email": "beverleylowery@imaginart.com",
+    "phone": "+1 (957) 400-2087",
+    "address": "477 Seba Avenue, Norvelt, Hawaii, 7068",
+    "about": "Laborum eiusmod cupidatat elit culpa proident aliquip veniam duis reprehenderit commodo deserunt est anim. Dolore id cillum non dolor sint incididunt et nulla minim voluptate commodo. Sint ullamco adipisicing occaecat incididunt cillum velit elit laboris laboris reprehenderit ut. Sint commodo labore deserunt sit officia consequat fugiat enim aute sunt irure reprehenderit. Sunt in aliquip id labore consectetur mollit est non qui eiusmod consectetur enim tempor. Incididunt minim voluptate anim eiusmod velit consequat. Pariatur elit est dolor voluptate occaecat do consequat adipisicing Lorem amet.\r\n",
+    "registered": "2025-05-19T03:38:59 -06:-30",
+    "latitude": -34.309937,
+    "longitude": -92.504454,
+    "tags": [
+        "voluptate",
+        "pariatur",
+        "velit",
+        "ut",
+        "veniam",
+        "elit",
+        "adipisicing"
+    ],
+    "friends": [
+        {
+            "id": 0,
+            "name": "Katheryn Berger"
+        },
+        {
+            "id": 1,
+            "name": "Ada Kramer"
+        },
+        {
+            "id": 2,
+            "name": "Elnora Willis"
+        }
+    ],
+    "greeting": "Hello, Beverley Lowery! You have 9 unread messages.",
+    "favoriteFruit": "apple"
 }
+

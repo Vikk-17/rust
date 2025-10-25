@@ -1,9 +1,8 @@
-use std::fs;
-use std::error::Error;
+mod model;
+use model::read_json_file;
 
-fn main() -> Result<(), Box<dyn Error>> {
-    let data = fs::read_to_string("config.json")?;
-    println!("{data:?}");
 
-    Ok(())
+fn main() {
+   let data = read_json_file("config.json").unwrap();
+   println!("{:?}", data._id);
 }
