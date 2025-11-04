@@ -1,14 +1,11 @@
+mod handlers;
+mod model;
+
 use actix_web::{web, App, HttpServer};
 use sqlx::postgres::PgPoolOptions;
 use dotenvy::dotenv;
 use anyhow::{Result, Error};
-
-mod handlers;
 use handlers::*;
-
-// mod model;
-// use model::*;
-
 
 #[actix_web::main]
 async fn main() -> Result<(), Error> {
@@ -26,7 +23,6 @@ async fn main() -> Result<(), Error> {
         .expect("Pool failed");
 
     let pool_data = web::Data::new(pool);
-
     println!("Server is running on http://localhost:8080");
 
     let _ = HttpServer::new( move || {
@@ -34,6 +30,7 @@ async fn main() -> Result<(), Error> {
             .app_data(pool_data.clone())
             .service(test)
             .service(index)
+            .service(signup)
     })
     .bind(("127.0.0.1", 8080))?
         .run()
