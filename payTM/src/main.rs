@@ -1,40 +1,18 @@
-use env_logger::Builder;
-use actix_web::{get, web, App, HttpResponse, HttpServer, Responder};
-use sqlx::postgres::{PgPoolOptions, PgRow};
-use sqlx::{FromRow, Postgres, Row};
+use actix_web::{web, App, HttpServer};
+use sqlx::postgres::PgPoolOptions;
 use dotenvy::dotenv;
 use anyhow::{Result, Error};
-use serde_json::json;
-use serde::{Serialize, Deserialize};
 
-#[derive(Deserialize, Serialize, Debug)]
-struct SingupInput {
-    username: String,
-    password: String,
-    firstname: String,
-    lastname: String,
-}
+mod handlers;
+use handlers::*;
 
-#[get("/")]
-async fn test() -> impl Responder {
-    HttpResponse::Ok().body("Testing")
-}
+// mod model;
+// use model::*;
 
-#[get("/index")]
-async fn index(db: web::Data<sqlx::PgPool>) -> impl Responder {
-    let row: (i64,) = sqlx::query_as("SELECT COUNT(*) FROM users")
-        .fetch_one(db.get_ref())
-        .await
-        .unwrap_or((0,));
-    HttpResponse::Ok().json(json!({
-        "Total User": row.0
-    }))
-}
 
 #[actix_web::main]
 async fn main() -> Result<(), Error> {
 
-    // Builder::from_env("RUST_LOG").init();
     env_logger::init();
     dotenv().ok();
 
