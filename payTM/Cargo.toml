@@ -3,6 +3,10 @@ name = "payTM"
 version = "0.1.0"
 edition = "2024"
 
+[[bin]]
+name = "payTM"
+path = "src/main.rs"
+
 [dependencies]
 actix-files = "0.6.8"
 actix-web = "4.11.0"
