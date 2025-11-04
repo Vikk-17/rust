@@ -14,12 +14,10 @@ pub struct SigninInput {
     pub password: String,
 }
 
-
 #[derive(Serialize, Debug)]
 pub struct UserOut {
     pub id: i64,
     pub username: String,
     pub firstname: String,
-    pub lastname: String
+    pub lastname: String,
 }
-
