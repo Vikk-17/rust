@@ -31,6 +31,7 @@ async fn main() -> Result<(), Error> {
             .service(test)
             .service(index)
             .service(signup)
+            .service(signin)
     })
     .bind(("127.0.0.1", 8080))?
         .run()

@@ -9,7 +9,7 @@ use actix_web::{
 };
 use sqlx::Row;
 use serde_json::json;
-use crate::model::{SingupInput, UserOut};
+use crate::model::*;
 
 #[get("/")]
 pub async fn test() -> impl Responder {
@@ -30,7 +30,7 @@ pub async fn index(db: Data<sqlx::PgPool>) -> impl Responder {
 /// POST /signup
 /// Body JSON: { "username": "...", "password": "...", "firstname": "...", "lastname": "..." }
 #[post("/signup")]
-pub async fn signup(db: Data<sqlx::PgPool>, body: Json<SingupInput>) -> Result<HttpResponse, Error> {
+pub async fn signup(db: Data<sqlx::PgPool>, body: Json<SignupInput>) -> Result<HttpResponse, Error> {
     let input = body.into_inner();
     
     let row = sqlx::query(
@@ -63,4 +63,36 @@ pub async fn signup(db: Data<sqlx::PgPool>, body: Json<SingupInput>) -> Result<H
         }
     }
 
+}
+
+/// POST /signin
+/// Body JSON: {"username": "...", "password": "..."}
+#[post("/signin")]
+pub async fn signin(db: Data<sqlx::PgPool>, body: Json<SigninInput>) -> impl Responder {
+    let input = body.into_inner();
+
+    let row = sqlx::query(
+        r#"
+        SELECT *
+        FROM users
+        WHERE username = $1 and password = $2
+        "#
+    )
+        .bind(&input.username)
+        .bind(&input.password)
+        .fetch_one(db.get_ref())
+        .await;
+
+    match row {
+        Ok(_) => {
+            HttpResponse::Ok().json(json!({
+                "status": "Sign up successful",
+            }))
+        },
+        Err(_) => {
+            HttpResponse::Unauthorized().json(json!({
+                "message": "Unauthorized access",
+            }))
+        }
+    }
 }
