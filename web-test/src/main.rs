@@ -1,40 +1,23 @@
 mod handlers;
 mod models;
+mod state;
 
 use std::sync::Mutex;
 use actix_web::{
-    App, HttpServer, Responder, get, web
+    App,
+    HttpServer,
+    web,
+    middleware::Logger,
 };
 use handlers::*;
-
-#[allow(unused)]
-struct AppState {
-    app_name: String,
-    author: String,
-    year: u16,
-}
-
-struct AppStateWithMutex {
-    counter: Mutex<i32>,
-}
-
-#[get("/appstate")]
-async fn appstate(data: web::Data<AppState>) -> impl Responder {
-    let app_name = &data.app_name;
-    format!("The name of the app: {app_name}")
-}
-
-#[get("/counter")]
-async fn get_counter(data: web::Data<AppStateWithMutex>) -> impl Responder {
-    let mut counter = data.counter.lock().unwrap();
-    *counter += 1;
-    format!("The counter value is: {counter}")
-}
+use env_logger::Env;
+use crate::state::*;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
 
-    env_logger::init();
+    // env_logger::init();
+    env_logger::init_from_env(Env::default().default_filter_or("info"));
 
     println!("Server has been started on http://localhost:8080/");
     let counter = web::Data::new(AppStateWithMutex {
@@ -43,6 +26,8 @@ async fn main() -> std::io::Result<()> {
 
     HttpServer::new(move || {
         App::new()
+        .wrap(Logger::default())
+        .wrap(Logger::new("%a %{User-Agent}i"))
         .app_data(web::Data::new(AppState {
             app_name: String::from("Actix Web"),
             author: String::from("John"),
@@ -58,6 +43,7 @@ async fn main() -> std::io::Result<()> {
         .service(json_test)
     })
     .bind(("127.0.0.1", 8080))?
+    .workers(4) // <- by default 8 or the number of physical cpu in the system
     .run()
     .await
 }
