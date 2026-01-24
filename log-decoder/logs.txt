@@ -1,0 +1,15 @@
+Program ComputeBudget111111111111111111111111111111 invoked [1]
+Program ComputeBudget111111111111111111111111111111 success
+
+Program 9xQeWvG816bUx9EPfVZ4Wk6i8K6Q6vZp4u5YF3gX invoked [1]
+Program log: Instruction: Transfer
+Program log: amount=1000
+Program log: from=9A1XfWZt9pQp9Q8K2s9Hh2M8m4LZ7abc123
+Program log: to=7HkT8pLmVQx7E8RZJx2q5M9zKabc987
+Program log: fee=5
+Program 9xQeWvG816bUx9EPfVZ4Wk6i8K6Q6vZp4u5YF3gX success
+
+Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA invoked [2]
+Program log: Instruction: MintTo
+Program log: amount=5000
+Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA success
