@@ -1,61 +1,97 @@
-// fn largest_i32(list: &[i32]) -> &i32 {
-//     let mut largest = &list[0]; // fetch the first element and returning &i32
-//     for item in list {
-//         if item > largest {
-//             largest = item;
-//         }
+// fn max_value<T>(a: T, b: T) -> T
+// where 
+//     T: std::cmp::PartialOrd
+// {
+//     if a > b {
+//         a
+//     } else {
+//         b
 //     }
-//     return largest;
 // }
 //
-//
-// fn largest_char(list: &[char]) -> &char {
-//     // main reason to use &list[0] and not the list[0] is because it is 
-//     // depend on your return type
-//     let mut largest = &list[0]; // fetch the first element and return &char
-//     for item in list {
-//         if item > largest {
-//             largest = item;
-//         }
+// fn max_ref<'a, T>(a: &'a T, b: &'a T) -> &'a T
+// where
+//     T: std::cmp::PartialOrd
+// {
+//     if a > b {
+//         a
+//     } else {
+//         b
 //     }
-//     return largest;
 // }
 //
-// // Write the code for generics
-// fn largest<T: std::cmp::PartialOrd>(list: &[T]) -> &T {
-//     let mut largest = &list[0];
-//     for item in list {
-//         if item > largest {
-//             largest = item;
-//         } 
+// struct Pair<T> {
+//     first: T,
+//     second: T,
+// }
+//
+// impl<T> Pair<T> {
+//     fn new(first: T, second: T) -> Self {
+//         Self {
+//             first,
+//             second,
+//         }
 //     }
-//     return largest;
-// } 
+//
+//     fn first(&self) -> &T {
+//         &self.first
+//     }
+//
+//     fn second(&self) -> &T {
+//         &self.second
+//     }
+//
+//     fn swap(&mut self) {
+//         std::mem::swap(&mut self.first, &mut self.second);
+//     }
+// }
+//
 
+struct Pair<T, U> {
+    first: T,
+    second: U,
+}
 
-mod distance;
-use distance::*;
+impl<T,U> Pair<T, U> {
+    fn new(first: T, second: U) -> Self {
+        Self{first, second}
+    }
+    fn first(&self) -> &T {
+        &self.first
+    }
+    fn second(&self) -> &U {
+        &self.second
+    }
+    fn replace_first(&mut self, value: T) {
+        std::mem::replace(&mut self.first, value);
+    }
+    fn replace_second(&mut self, value: U) {
+        std::mem::replace(&mut self.second, value);
+    }
+    fn map_first<F, R>(self, f: F) -> Pair<R, U>
+    where 
+        F: FnOnce(T) -> R
+    {
+        Pair {
+            first: f(self.first),
+            second: self.second
+        }
+    }
+}
 
 fn main() {
-    // let number_list = vec![34, 50, 25, 100, 65];
+    // println!("{}", max_ref(&10, &20));
+    // println!("{}", max_ref(&3.14, &2.71));
+    // println!("{}", max_ref(&'a', &'z'));
     //
-    // let result = largest(&number_list);
-    // println!("The largest number is {result}");
+    // let a = String::from("apple");
+    // let b = String::from("banana");
     //
-    // let char_list = vec!['y', 'm', 'a', 'q'];
+    // println!("{}", max_value(&a, &b));
+    // let mut p = Pair::new(10, 20);
     //
-    // let result = largest(&char_list);
-    // println!("The largest char is {result}");
+    // p.swap();
     //
-    // // let decimal_list = vec![34.2, 50.4, 25.1, 100.5, 65.6];
-    // let decimal_list: Vec<f64> = vec![34.1, 34.1, 34.1, 34.1, 34.1];
-    //
-    // let result = largest(&decimal_list);
-    // println!("The largest number is {result}");
-
-    let p1 = Point{x:3, y: 2};
-    println!("x: {} and y: {}", p1.x, p1.y);
-    let p2 = Point{x: 2, y: 4};
-    println!("x: {} and y: {}", p1.x, p1.y);
-    println!("Result: {}", p1.calcualtion(&p2));
+    // assert_eq!(*p.first(), 20);
+    // assert_eq!(*p.second(), 10);
 }
