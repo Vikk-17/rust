@@ -1,27 +1,31 @@
-use std::{env, fs::File};
+use std::{fs::File, io::Read};
 use sha2::{Sha256, Digest};
-use std::path::Path;
 
 pub struct Checksum;
-
 impl Checksum {
-    pub fn read_args() -> Vec<String> {
-        let args: Vec<String> = env::args().collect();
-        args
+    pub fn parser() -> Result<String, &'static str> {
+        let args: Vec<String> = std::env::args().collect();
+
+        if args.len() < 2 {
+            return Err("Not enough argument");
+        }
+
+        Ok(args[1].clone())
     }
 
-    pub fn file_checksum(file_path: Path) -> Result<String, Box<dyn std::error::Error>> {
-        // let contents = fs::read_to_string(file_path)
-        //     .expect("Could not read the file");
-        // file path
-        // open the file and return a handler
-        let mut file = File::open(file_path)
-            .expect("Could not read the file");
-
+    pub fn file_checksum(file_path: &str) -> Result<String, Box<dyn std::error::Error>> {
+        let mut file = File::open(file_path)?;
         let mut hasher = Sha256::new();
-        std::io::copy(&mut file, &mut hasher)?;
-        let hash_bytes = hasher.finalize();
-
-        Ok(hex::encode(hash_bytes))
+        let mut buffer = [0u8; 8192];
+        loop {
+            let byte_reads = file.read(&mut buffer)?;
+            if byte_reads == 0 {
+                break;
+            }
+            hasher.update(&buffer[..byte_reads]);
+        }
+        let result = hasher.finalize();
+        let hex_string = hex::encode(result);
+        Ok(format!("0x{}", hex_string))
     }
 }
